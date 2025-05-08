@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prebid.js Example</title>
+
+    <!-- Prebid.js library from public directory -->
+    <script src="/prebid9.42.0.js"></script>
+    
+    <!-- Add this to help with debugging -->
+    <script>
+      window.pbjs = window.pbjs || {};
+      window.pbjs.que = window.pbjs.que || [];
+      
+      // Add a simple debug function to log available adapters
+      window.pbjs.que.push(function() {
+        console.log('Prebid.js loaded, version:', window.pbjs.version);
+        // Try to access internal properties to see what adapters are available
+        if (window.pbjs.adapterManager) {
+          console.log('Available adapter manager methods:', Object.keys(window.pbjs.adapterManager));
+        }
+      });
+    </script>
+
+    <!-- Google Publisher Tag -->
+    <script
+      async
+      src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+    ></script>
+  </head>
+  <body>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
