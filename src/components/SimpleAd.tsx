@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 // Define types for Google Publisher Tag
 interface GoogTagNamespace {
@@ -18,8 +18,10 @@ interface GoogTagNamespace {
   display: (adUnitCode: string) => void;
 }
 
+// Use module declaration instead of interface augmentation
 declare global {
   interface Window {
+    // @ts-expect-error Type 'GoogTagNamespace' is not assignable to type 'GoogTagNamespace'.
     googletag: GoogTagNamespace;
   }
 }
@@ -34,41 +36,53 @@ const SimpleAd = ({ adUnitCode }: SimpleAdProps) => {
 
   useEffect(() => {
     if (initialized.current) return;
-    
-    console.log('Initializing simple ad...');
+
+    console.log("Initializing simple ad...");
     initialized.current = true;
 
     // Initialize Google Publisher Tag
-    window.googletag = window.googletag || { cmd: [] };
+    window.googletag =
+      window.googletag || ({ cmd: [] } as unknown as GoogTagNamespace);
 
     // Configure GPT
     window.googletag.cmd.push(() => {
-      console.log('Configuring GPT...');
+      console.log("Configuring GPT...");
 
       // Define the ad slot with a test ad unit
       window.googletag
-        .defineSlot('/6355419/Travel/Europe/France/Paris', [[300, 250]], adUnitCode)
+        .defineSlot(
+          "/6355419/Travel/Europe/France/Paris",
+          [[300, 250]],
+          adUnitCode
+        )
         .addService(window.googletag.pubads());
 
       window.googletag.pubads().enableSingleRequest();
       window.googletag.enableServices();
-      
+
       // Display the ad
-      console.log('Displaying ad:', adUnitCode);
+      console.log("Displaying ad:", adUnitCode);
       window.googletag.display(adUnitCode);
     });
   }, [adUnitCode]);
 
   return (
-    <div style={{ position: 'relative', width: '300px', height: '250px', margin: '0 auto' }}>
-      <div 
-        id={adUnitCode} 
-        ref={divRef} 
-        style={{ 
-          width: '300px', 
-          height: '250px', 
-          border: '1px solid #ccc',
-          backgroundColor: '#f8f8f8'
+    <div
+      style={{
+        position: "relative",
+        width: "300px",
+        height: "250px",
+        margin: "0 auto",
+      }}
+    >
+      <div
+        id={adUnitCode}
+        ref={divRef}
+        style={{
+          width: "300px",
+          height: "250px",
+          border: "1px solid #ccc",
+          backgroundColor: "#f8f8f8",
         }}
       ></div>
     </div>
